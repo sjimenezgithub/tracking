@@ -154,7 +154,43 @@ X  Y   X  Y   X  Y   X  Y
 \subsection{Tracking as Classical Planning}
 Here we show that the probability distribution $P(\lambda|\Omega,\mathcal{M})$ that solves a {\em Model-based Multi-Agent Tracking} can be estimated using an off-the-shelf classical planning problem.
 
+\begin{figure}
+\begin{scriptsize}
+\begin{verbatim}
+0: move-dec-x(ant1,l1,l0) move-dec-x(ant3,l15,l14) move-dec-x(ant8,l10,l9) move-dec-x(ant9,l11,l10) move-dec-y(ant1,l12,l11) move-dec-y(ant3,l14,l13) move-dec-y(ant7,l9,l8) move-inc-x(ant10,l4,l5) move-inc-x(ant2,l5,l6) move-inc-x(ant4,l1,l2) move-inc-x(ant5,l2,l3) move-inc-x(ant6,l4,l5) move-inc-x(ant7,l8,l9) move-inc-y(ant2,l4,l5) move-inc-y(ant4,l1,l2) move-inc-y(ant5,l3,l4) move-inc-y(ant6,l5,l6) move-inc-y(ant8,l2,l3) move-inc-y(ant9,l3,l4)
 
+1: move-dec-x(ant3,l14,l13) move-dec-x(ant9,l10,l9) move-dec-y(ant1,l11,l10) move-dec-y(ant3,l13,l12) move-dec-y(ant7,l8,l7) move-inc-x(ant10,l5,l6) move-inc-x(ant2,l6,l7) move-inc-x(ant4,l2,l3) move-inc-x(ant5,l3,l4) move-inc-x(ant6,l5,l6) move-inc-y(ant2,l5,l6) move-inc-y(ant4,l2,l3) move-inc-y(ant5,l4,l5) move-inc-y(ant6,l6,l7) move-inc-y(ant8,l3,l4) move-inc-y(ant9,l4,l5)
+
+2: move-dec-x(ant3,l13,l12) move-dec-y(ant1,l10,l9) move-dec-y(ant3,l12,l11) move-dec-y(ant7,l7,l6) move-inc-x(ant10,l6,l7) move-inc-x(ant2,l7,l8) move-inc-x(ant4,l3,l4) move-inc-x(ant5,l4,l5) move-inc-x(ant6,l6,l7) move-inc-y(ant2,l6,l7) move-inc-y(ant4,l3,l4) move-inc-y(ant5,l5,l6) move-inc-y(ant6,l7,l8) move-inc-y(ant8,l4,l5) move-inc-y(ant9,l5,l6)
+
+3: move-dec-x(ant3,l12,l11) move-dec-y(ant3,l11,l10) move-inc-x(ant10,l7,l8) move-inc-x(ant2,l8,l9) move-inc-x(ant4,l4,l5) move-inc-x(ant5,l5,l6) move-inc-x(ant6,l7,l8) move-inc-y(ant2,l7,l8) move-inc-y(ant4,l4,l5) move-inc-y(ant5,l6,l7) move-inc-y(ant6,l8,l9) move-inc-y(ant8,l5,l6)
+
+4: move-dec-x(ant2,l9,l8) move-dec-x(ant3,l11,l10) move-dec-x(ant9,l9,l8) move-dec-y(ant3,l10,l9) move-dec-y(ant9,l6,l5) move-inc-x(ant10,l8,l9) move-inc-x(ant4,l5,l6) move-inc-x(ant5,l6,l7) move-inc-x(ant6,l8,l9) move-inc-y(ant2,l8,l9) move-inc-y(ant4,l5,l6) move-inc-y(ant5,l7,l8) move-inc-y(ant8,l6,l7)
+
+5: move-dec-x(ant3,l10,l9) move-dec-x(ant9,l8,l7) move-dec-y(ant2,l9,l8) move-dec-y(ant3,l9,l8) move-inc-x(ant2,l8,l9) move-inc-x(ant4,l6,l7) move-inc-x(ant5,l7,l8) move-inc-y(ant4,l6,l7) move-inc-y(ant8,l7,l8)
+
+6: move-dec-x(ant7,l9,l8) move-dec-x(ant8,l9,l8) move-dec-y(ant10,l9,l8) move-dec-y(ant2,l8,l7) move-dec-y(ant3,l8,l7) move-inc-x(ant4,l7,l8) move-inc-x(ant5,l8,l9) move-inc-y(ant4,l7,l8) move-inc-y(ant5,l8,l9) move-inc-y(ant8,l8,l9)
+
+7: move-dec-x(ant3,l9,l8) move-dec-x(ant6,l9,l8) move-dec-y(ant6,l9,l8) move-inc-x(ant4,l8,l9) move-inc-x(ant7,l8,l9) move-inc-y(ant10,l8,l9) move-inc-y(ant2,l7,l8) move-inc-y(ant4,l8,l9)
+
+8: move-dec-x(ant3,l8,l7) move-dec-x(ant5,l9,l8) move-dec-x(ant8,l8,l7) move-dec-y(ant2,l8,l7) move-dec-y(ant5,l9,l8) move-dec-y(ant8,l9,l8) move-inc-y(ant6,l8,l9)
+
+9: move-dec-x(ant6,l8,l7) move-dec-x(ant7,l9,l8) move-dec-x(ant8,l7,l6) move-dec-x(ant9,l7,l6) move-dec-y(ant3,l7,l6)
+
+10: move-dec-x(ant3,l7,l6) move-dec-x(ant6,l7,l6) move-dec-x(ant7,l8,l7) move-dec-x(ant8,l6,l5) move-dec-x(ant9,l6,l5) move-dec-y(ant10,l9,l8) move-dec-y(ant2,l7,l6) move-dec-y(ant3,l6,l5) move-dec-y(ant7,l6,l5) move-inc-x(ant5,l8,l9) move-inc-y(ant5,l8,l9) move-inc-y(ant8,l8,l9)
+
+11: move-dec-x(ant3,l6,l5) move-dec-x(ant6,l6,l5) move-dec-x(ant7,l7,l6) move-dec-x(ant8,l5,l4) move-dec-x(ant9,l5,l4) move-dec-y(ant10,l8,l7) move-dec-y(ant2,l6,l5) move-dec-y(ant3,l5,l4) move-dec-y(ant7,l5,l4) move-inc-x(ant4,l9,l10) move-inc-y(ant5,l9,l10)
+
+12: move-dec-x(ant10,l9,l8) move-dec-x(ant3,l5,l4) move-dec-x(ant6,l5,l4) move-dec-x(ant7,l6,l5) move-dec-x(ant8,l4,l3) move-dec-x(ant9,l4,l3) move-dec-y(ant1,l9,l8) move-dec-y(ant10,l7,l6) move-dec-y(ant3,l4,l3) move-dec-y(ant7,l4,l3) move-inc-x(ant1,l0,l1) move-inc-x(ant4,l10,l11) move-inc-y(ant5,l10,l11) move-inc-y(ant8,l9,l10) move-inc-y(ant9,l5,l6)
+
+13: move-dec-x(ant10,l8,l7) move-dec-x(ant3,l4,l3) move-dec-x(ant6,l4,l3) move-dec-x(ant7,l5,l4) move-dec-x(ant8,l3,l2) move-dec-x(ant9,l3,l2) move-dec-y(ant1,l8,l7) move-dec-y(ant10,l6,l5) move-dec-y(ant2,l5,l4) move-dec-y(ant3,l3,l2) move-dec-y(ant7,l3,l2) move-inc-x(ant1,l1,l2) move-inc-x(ant4,l11,l12) move-inc-y(ant5,l11,l12) move-inc-y(ant8,l10,l11) move-inc-y(ant9,l6,l7)
+
+14: move-dec-x(ant10,l7,l6) move-dec-x(ant2,l9,l8) move-dec-x(ant3,l3,l2) move-dec-x(ant6,l3,l2) move-dec-x(ant7,l4,l3) move-dec-x(ant8,l2,l1) move-dec-x(ant9,l2,l1) move-dec-y(ant1,l7,l6) move-dec-y(ant10,l5,l4) move-dec-y(ant2,l4,l3) move-dec-y(ant3,l2,l1) move-dec-y(ant4,l9,l8) move-dec-y(ant7,l2,l1) move-inc-x(ant1,l2,l3) move-inc-x(ant4,l12,l13) move-inc-y(ant5,l12,l13) move-inc-y(ant6,l9,l10) move-inc-y(ant8,l11,l12) move-inc-y(ant9,l7,l8)
+\end{verbatim}
+\end{scriptsize}
+ \caption{\small Plan simulating the movement of ten agents in a $15\times 15$ grid.}
+\label{fig:plan}
+\end{figure}
 
 \section{Evaluation: Ants tracking}
 \label{sec:evaluation}
