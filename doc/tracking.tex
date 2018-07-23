@@ -76,35 +76,36 @@
 \section{Introduction}
 \label{sec:introduction}
 
-{\em Multi-agent tracking} is the process of locating multiple moving objects (agents) over time. In such scenario, the assumption of having fully observable trajectories of the moving objects means that the sensors are able to capture every state change at every instant, which typically is unrealistic. Normally, obtaining sensor feedback (or the processing of the sensor readings) is associated with a given sampling frequency that misses intermediate data between two subsequent sensor readings.
+{\em Multi-agent tracking} is the task of locating multiple moving objects (the agents) over time. In such task, the assumption of having fully observable trajectories of the moving objects means that the sensors are able to capture every state change at every instant, which typically is unrealistic. Normally obtaining sensor feedback (or the processing of the sensor readings) is associated with a given sampling frequency that misses intermediate data between two subsequent sensor readings.
 
-In this work we propose to exploit (1), a movement model of the agents to track and (2), the power of current classical planner, to produce reliable multi-agent tracking (even when there is a significant amount of missing sensor data). The paper formalizes the {\em Model-based Multi-Agent Tracking} task and shows that this task is addressable with off-the-shelf classical planners. Last but not least the paper shows the appliability of this approach for tracking ants.
+This work exploits (1), a movement model of the agents to track and (2), an off-the-shelf classical planner, to produce reliable multi-agent tracking (even when there is a significant amount of missing sensor data). The paper formalizes the {\em Model-based Multi-Agent Tracking} task and shows that this task is addressable with an off-the-shelf classical planner. Last but not least the paper shows the appliability of this approach for tracking ants.
 
 
 \section{Background}
 \label{sec:background}
+This section defines the planning model and the observation model that we follow in this work.
 
 \subsection{The Classical Planning Model}
 We define a {\em classical planning} problem as a tuple $P=\tup{X,I,G,A}$:
 \begin{itemize}
 \item $X$, is the set of {\em state variables} such that each variable $x\in X$ has an associated finite domain $D(x)$ defining the set of possible values that the variable can take. The set of possible states $S$ in a classical planning problem $P$ is then given by the {\em cartession product} of the size of the domain variables.
 \item $I$ is the {\em initial state}, a full assignment to the variables in $X$ that is compatible with their respective domains.
-\item $G$, is a conjunction of {\em goal conditions} where each $g\in G$ expresses as different Boolean condition over the state variables in $X$, that is $g:S\rightarrow \{0,1\}$.
-\item $A$ is the set of actions whose semantics is expressed with two functions:
+\item $G$ a conjunction of {\em goal conditions} where each $g\in G$ expresses as different Boolean condition over the state variables in $X$, that is $g:S\rightarrow \{0,1\}$.
+\item $A$ is the set of actions. The semantics of actions $a\in A$ is expressed with two functions:
 \begin{itemize}
 \item The {\em applicability function} $\alpha:A\times S\rightarrow \{0,1\}$ which determines if a given action $a\in A$ is applicable in a given state $s\in S$.
-\item The {\em transition function} $\theta:A\times S\rightarrow S$ which determines the successor of a state $s\in S$ after an applicable action $a\in A$ is applied.
+\item The {\em transition function} $\theta:A\times S\rightarrow S$ determining which is the successor state $\theta(s,a)$ that results after applying action $a\in A$ at the current state $s\in S$.
 \end{itemize}
 \end{itemize}
 
 A {\em plan} for a classical planning problem $P$ is an action sequence $\pi=\tup{a_1, \ldots, a_n}$ that induces the {\em state trajectory} $s=\tup{s_0, s_1, \ldots, s_n}$ such that $s_0=I$ and, for each {\small $1\leq i\leq n$}, $a_i$ is applicable in $s_{i-1}$ and generates the successor state $s_i=\theta(s_{i-1},a_i)$. The {\em plan length} is denoted with $|\pi|=n$ . A plan $\pi$ {\em solves} $P$ iff $G\subseteq s_n$, i.e.,~if all the goal conditions are satisfied at the last state reached after following the application of the plan $\pi$ in the initial state $I$. A solution plan for $P$ is {\em optimal} if it has minimum length.
 
 \subsection{The Observation Model}
-Given classical planning problem $P=\tup{X,I,G,A}$, we define the observation $\omega_s$ of a state $s\in S$ as a partial assigment of the state variables in $X$. In this work we assume that state observations are noiseless, this means that the partial assigment given in $\omega_s$ is correct while the value of some variables in $X$ is unknown.
+Given a classical planning problem $P=\tup{X,I,G,A}$, we define $\omega_s=obs(s)$ as the observation of a state $s\in S$ which is as a partial assigment of the state variables in $X$. In this work we assume that state observations are noiseless, this means the variable values given by $\omega_s$ are correct while the value of some variables in $X$ may be unknown.
 
-Now, we define the observation of the execution of a plan $\pi$ that solves $P$ as a sequence $\omega(\pi)=\tup{\omega_0, \ldots, \omega_m}$ of {\em partially-observed} states. Because of the partial observability $0\leq |\omega_\pi|\leq |\pi|+1$ and hence, the transitions between two consecutive observed states may involve the execution of more than a single action. Formally $\theta(s_i,\tup{a_1,\ldots,a_k})=s_{i+1}$, where $k\geq 1$ is unknown and unbound. This means that having $\omega_\pi$ does not implies knowing the actual length of $\pi$.
+Now, we define the observation of the execution of a plan $\pi$ that solves $P$ as a sequence $\Omega_\pi=\tup{obs(s_0), \ldots, obs(s_m)}$ of {\em partially-observed} states. Because of the partial observability $0\leq |\Omega_\pi|\leq |\pi|+1$ and hence, the transitions between two consecutive observed states may involve the execution of more than a single action. Formally $\theta(s_i,\tup{a_1,\ldots,a_k})=s_{i+1}$, where $k\geq 1$ is unknown and unbound. This means that having $\Omega_\pi$ does not implies knowing the actual length of $\pi$.
 
-We say that a given observation $\tau$ is {\em compliant} with a given plan $\pi$ iff the sequence of states in $\omega_\pi$ is the same sequence of states traversed by $\pi$ but:
+We say that a given plan $\pi$ is {\em compliant} with a given sequence $\Omega_\pi=\tup{obs(s_0), \ldots, obs(s_m)}$ of {\em partially-observed} states iff $\Omega_\pi$ is the same sequence of states traversed by $\pi$ but:
 \begin{enumerate}
 \item with certain states omitted and/or,
 \item the value of certain fluents omitted in that states, i.e.~$|\omega_{s_i}|\leq |X|$ for every $0\leq i\leq m$.
@@ -113,59 +114,45 @@ We say that a given observation $\tau$ is {\em compliant} with a given plan $\pi
 \section{Model-based Multi-Agent Tracking}
 \label{sec:tracking}
 
-{\em Model-based Multi-Agent Tracking} is the task of identifying $k$ moving objects not by its shape (the $k$ objects are considered identical), but by the observation of their movement in time by building the most possible explanation that is compliant with a model of the objects movement.
+{\em Model-based Multi-Agent Tracking} is the task of locating $k$ moving objects by building the most possible explanation of their trajectories that is compliant with a model of the objects movement and a set of observations.
 
-The inputs to the {\em Model-based k-Agent Tracking} task are:
+Formally the inputs to the {\em Model-based k-Agent Tracking} task are $\mathcal{T}=\tup{\Lambda, \Omega, \mathcal{M}}$:
 \begin{itemize}
-\item A set of labels $\{\lambda_1,\ldots,\lambda_k\}$ to uniquely identify each of the $k$-agents.
-\item A sequence of state observations $\tup{\omega_0, \ldots, \omega_m}$ identifying the configuration of the different agents to track. In this observations agents are unlabeled. To illustrate this, Figure~\ref{fig:observation} shows an example of a state observation where the configuration of ten ants is given, in terms of their $X$ and $Y$ 2D-coordinates, for the initial time instant.
-\item A movement model. This model expresses the set of possible configuration changes of an agent between to subsequent time-stamps $t$ and $t+1$. To illustrate this, Figure~\ref{fig:model} shows an example of a possible movement for each of the ants to change its configuration between to subsequent time-stamps.
+\item A set of labels $\Lambda=\{\lambda_1,\ldots,\lambda_k\}$ to uniquely identify each of the $k$-agents.
+\item A sequence of state observations $\Omega=\tup{obs(s_0), \ldots, obs(s_m)}$. This observations express the configurations of the different agents to track, in all this observations agents are unlabeled. To illustrate this, Figure~\ref{fig:observation} shows an example of four observations of the 2D coordinates of ten agents (in time-stamps t1, t2 and t3 the coordinates of some of the ten agents is unknown). Note that observations in the same row do not neccesaary refer to the same agent. 
+\item A movement model $\mathcal{M}$. This model expresses the set of possible configuration changes of an agent between to subsequent time-stamps $t$ and $t+1$. An example of a possible movement for each of the agents to change its configuration between to subsequent time-stamps could be $\mathcal{M}=\{x_{t+1}=x_t + 1, x_{t+1}=x_t - 1, y_{t+1}=y_t + 1, y_{t+1}=y_t - 1\}$.
 \end{itemize}
 
-The output to the {\em Model-based Multi-Agent Tracking} task is, for each agent, a probability distribution of the possible labels that the agent can have given the observations and the agent models.
+The output to the {\em Model-based Multi-Agent Tracking} task is, for each agent, a probability distribution $P(\lambda|\Omega,\mathcal{M})$ of the possible labels that the agent can have given the observations and the agent models.
 
 
 \begin{figure}
 \begin{scriptsize}
 \begin{verbatim}
-(at-x ant1 l1) (at-y ant1 l12)
-(at-x ant2 l5) (at-y ant2 l4)
-(at-x ant3 l15) (at-y ant3 l14)
-(at-x ant4 l1) (at-y ant4 l1)	 
-(at-x ant5 l2) (at-y ant5 l3)
-(at-x ant6 l4) (at-y ant6 l5)
-(at-x ant7 l8) (at-y ant7 l9)
-(at-x ant8 l10) (at-y ant8 l2)
-(at-x ant9 l11) (at-y ant9 l3)
-(at-x ant10 l4) (at-y ant10 l9) 
+t0     t1     t2     t3
+X  Y   X  Y   X  Y   X  Y
+33 33  71 23  30 54  43 10
+72 22  95 11  93 89  59 36
+19 93  86 05  21 18  18 38
+58 65  06 60  67 94  78 60
+83 61  75 76  23 19  68 54
+16 53  17 98  41 59  59 96
+02 97  89 11  51 84  86 08
+75 23         79 69  87 60
+74 01         36 13
+66 49
 \end{verbatim}
 \end{scriptsize}
- \caption{\small Initial value of the 2D coordinates for ten agents.}
+ \caption{\small 2D coordinates for ten agents in four subsequent time-stamps.}
 \label{fig:observation}
 \end{figure}
 
-\begin{figure}
-\begin{scriptsize}
-\begin{verbatim}
-   (:action inc-x
-       :parameters  (?id - agent ?x1 ?x2 - loc)
-       :precondition (and (at-x ?id ?x1) (next ?x1 ?x2))
-       :effect (and (not (at-x ?id ?x1)) (at-x ?id ?x2)))
 
-   (:action inc-y
-       :parameters  (?id - agent ?y1 ?y2 - loc)
-       :precondition (and (at-y ?id ?y1) (next ?y1 ?y2))
-       :effect (and (not (at-y ?id ?y1)) (at-y ?id ?y2)))
-\end{verbatim}
-\end{scriptsize}
- \caption{\small Operators specified in PDDL for increasing the X and Y coordinates of an agent.}
-\label{fig:model}
-\end{figure}
 
 
 
 \subsection{Tracking as Classical Planning}
-Here we show that the probability distribution that solves a {\em Model-based Multi-Agent Tracking} can be estimated using an off-the-shelf classical planning problem.
+Here we show that the probability distribution $P(\lambda|\Omega,\mathcal{M})$ that solves a {\em Model-based Multi-Agent Tracking} can be estimated using an off-the-shelf classical planning problem.
 
 
 
