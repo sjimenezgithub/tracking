@@ -78,7 +78,7 @@
 
 {\em Multi-agent tracking} is the task of locating multiple moving objects (the agents) over time. In such task, the assumption of having fully observable trajectories of the moving objects means that the sensors are able to capture every state change at every instant, which typically is unrealistic. Normally obtaining sensor feedback (or the processing of the sensor readings) is associated with a given sampling frequency that misses intermediate data between two subsequent sensor readings.
 
-This work exploits (1), a movement model of the agents to track and (2), an off-the-shelf classical planner, to produce reliable multi-agent tracking (even when there is a significant amount of missing sensor data). The paper formalizes the {\em Model-based Multi-Agent Tracking} task and shows that this task is addressable with an off-the-shelf classical planner. Last but not least the paper shows the appliability of this approach for tracking ants.
+This work exploits (1), a movement model of the agents to track and (2), an off-the-shelf classical planner, to produce reliable multi-agent tracking (even when there is a significant amount of missing sensor data). The paper formalizes the {\em Model-based Multi-Agent Tracking} task and shows that this task is addressable with an off-the-shelf classical planner. Last but not least the paper shows the applicability of this approach for tracking ants.
 
 
 \section{Background}
@@ -88,7 +88,7 @@ This section defines the planning model and the observation model that we follow
 \subsection{The Classical Planning Model}
 We define a {\em classical planning} problem as a tuple $P=\tup{X,I,G,A}$:
 \begin{itemize}
-\item $X$, is the set of {\em state variables} such that each variable $x\in X$ has an associated finite domain $D(x)$ defining the set of possible values that the variable can take. The set of possible states $S$ in a classical planning problem $P$ is then given by the {\em cartession product} of the size of the domain variables.
+\item $X$, is the set of {\em state variables} such that each variable $x\in X$ has an associated finite domain $D(x)$ defining the set of possible values that the variable can take. The set of possible states $S$ in a classical planning problem $P$ is then given by the {\em Cartesian product} of the size of the domain variables.
 \item $I$ is the {\em initial state}, a full assignment to the variables in $X$ that is compatible with their respective domains.
 \item $G$ a conjunction of {\em goal conditions} where each $g\in G$ expresses as different Boolean condition over the state variables in $X$, that is $g:S\rightarrow \{0,1\}$.
 \item $A$ is the set of actions. The semantics of actions $a\in A$ is expressed with two functions:
@@ -101,7 +101,7 @@ We define a {\em classical planning} problem as a tuple $P=\tup{X,I,G,A}$:
 A {\em plan} for a classical planning problem $P$ is an action sequence $\pi=\tup{a_1, \ldots, a_n}$ that induces the {\em state trajectory} $s=\tup{s_0, s_1, \ldots, s_n}$ such that $s_0=I$ and, for each {\small $1\leq i\leq n$}, $a_i$ is applicable in $s_{i-1}$ and generates the successor state $s_i=\theta(s_{i-1},a_i)$. The {\em plan length} is denoted with $|\pi|=n$ . A plan $\pi$ {\em solves} $P$ iff $G\subseteq s_n$, i.e.,~if all the goal conditions are satisfied at the last state reached after following the application of the plan $\pi$ in the initial state $I$. A solution plan for $P$ is {\em optimal} if it has minimum length.
 
 \subsection{The Observation Model}
-Given a classical planning problem $P=\tup{X,I,G,A}$, we define $\omega_s=obs(s)$ as the observation of a state $s\in S$ which is as a partial assigment of the state variables in $X$. In this work we assume that state observations are noiseless, this means the variable values given by $\omega_s$ are correct while the value of some variables in $X$ may be unknown.
+Given a classical planning problem $P=\tup{X,I,G,A}$, we define $\omega_s=obs(s)$ as the observation of a state $s\in S$ which is as a partial assignment of the state variables in $X$. In this work we assume that state observations are noiseless, this means the variable values given by $\omega_s$ are correct while the value of some variables in $X$ may be unknown.
 
 Now, we define the observation of the execution of a plan $\pi$ that solves $P$ as a sequence $\Omega_\pi=\tup{obs(s_0), \ldots, obs(s_m)}$ of {\em partially-observed} states. Because of the partial observability $0\leq |\Omega_\pi|\leq |\pi|+1$ and hence, the transitions between two consecutive observed states may involve the execution of more than a single action. Formally $\theta(s_i,\tup{a_1,\ldots,a_k})=s_{i+1}$, where $k\geq 1$ is unknown and unbound. This means that having $\Omega_\pi$ does not implies knowing the actual length of $\pi$.
 
@@ -114,16 +114,22 @@ We say that a given plan $\pi$ is {\em compliant} with a given sequence $\Omega_
 \section{Model-based Multi-Agent Tracking}
 \label{sec:tracking}
 
-{\em Model-based Multi-Agent Tracking} is the task of locating $k$ moving objects by building the most possible explanation of their trajectories that is compliant with a model of the objects movement and a set of observations.
+{\em Model-based Multi-Agent Tracking} is the task of locating $k$ moving objects by building the most plausible explanation of their trajectories that is compliant with (1), a model of the objects movement and (2), a given set of observations.
 
-Formally the inputs to the {\em Model-based k-Agent Tracking} task are $\mathcal{T}=\tup{\Lambda, \Omega, \mathcal{M}}$:
+Formally the inputs to the {\em Model-based k-Agent Tracking} task are $\mathcal{T}=\tup{\Lambda, \mathcal{M}, \Omega}$, where:
 \begin{itemize}
-\item A set of labels $\Lambda=\{\lambda_1,\ldots,\lambda_k\}$ to uniquely identify each of the $k$-agents.
-\item A sequence of state observations $\Omega=\tup{obs(s_0), \ldots, obs(s_m)}$. This observations express the configurations of the different agents to track, in all this observations agents are unlabeled. To illustrate this, Figure~\ref{fig:observation} shows an example of four observations of the 2D coordinates of ten agents (in time-stamps t1, t2 and t3 the coordinates of some of the ten agents is unknown). Note that observations in the same row do not neccesaary refer to the same agent. 
-\item A movement model $\mathcal{M}$. This model expresses the set of possible configuration changes of an agent between to subsequent time-stamps $t$ and $t+1$. An example of a possible movement for each of the agents to change its configuration between to subsequent time-stamps could be $\mathcal{M}=\{x_{t+1}=x_t + 1, x_{t+1}=x_t - 1, y_{t+1}=y_t + 1, y_{t+1}=y_t - 1\}$.
+\item $\Lambda=\{\lambda_1,\ldots,\lambda_k\}$, is a set of labels to uniquely identify each of the $k$-agents.
+\item $\Omega=\tup{obs(s_0), \ldots, obs(s_m)}$, is a sequence of state observations . This observations express the configurations of the different agents to track, in all this observations agents are unlabeled. 
+\item $\mathcal{M}$ the agent model. This model represents the space of the possible configurations of an agent. The agent model is implicitly represented using two elements:
+\begin{itemize}
+\item $X_\mathcal{M}$, a finite set of variables with their corresponding domain.
+\item The functions defining the possible updates of the agent variables between to subsequent time-stamps $t$ and $t+1$. 
+\end{itemize}
 \end{itemize}
 
 The output to the {\em Model-based Multi-Agent Tracking} task is, for each agent, a probability distribution $P(\lambda|\Omega,\mathcal{M})$ of the possible labels that the agent can have given the observations and the agent models.
+
+To illustrate this, Figure~\ref{fig:observation} shows an example of four observations of the 2D coordinates of ten agents (at time-stamps t1, t2 and t3 the coordinates of some of the ten agents are missing because they are unknown). Note that observations in the same row do not necessary refer to the same agent (the agents identity is unknown). This task requires ten labels to uniquely identify the different agents and the agent model is given by to discrete variables $X,Y$ that models the current position of the agent and the following action model $\{x_{t+1}=x_t + 1, x_{t+1}=x_t - 1, y_{t+1}=y_t + 1, y_{t+1}=y_t - 1\}$ that represent the possible updates of the $X,Y$ between to subsequent time-stamps.
 
 
 \begin{figure}
@@ -143,54 +149,55 @@ X  Y   X  Y   X  Y   X  Y
 66 49
 \end{verbatim}
 \end{scriptsize}
- \caption{\small 2D coordinates for ten agents in four subsequent time-stamps.}
+ \caption{\small 2D coordinates for ten agents in four subsequent time-stamps (at t1, t2 and t3 some readings are missing).}
 \label{fig:observation}
 \end{figure}
 
 
+\subsection{Explaining observations with Classical Planning}
+Given an agent model $\mathcal{M}$ and a set of observations $\Omega=\tup{obs(s_0), \ldots, obs(s_m)}$, we can build a classical planning problem $P=\tup{X,I,G,A}$ such that a solution plan to this problem is an explanation of the input state observations and an optimal solution plan to this problem is the smallest explanation for given input observations and agent model.
 
+The classical planning problem $P=\tup{X,I,G,A}$ for explaining a set of observations $\Omega=\tup{obs(s_0), \ldots, obs(s_m)}$ with an agent model $\mathcal{M}$ is built as follows:
+\begin{enumerate}
+\item The set of state variables $X$ is build defining a set of variables $X_\mathcal{M}$ for each agent in the observations. In addition an extra state variable $X_t$ with discrete domain $[0,m]$ is added to keep track of the current time-stamp.
+\item The initial state $I$ is a full assignment of the agent variables for each of the agents (note that in t0 the 2D coordinates of all agents are known).
+\item The set of goals $G$ is a conjunction of the conditions forcing the plan to generate the observations at their precise times-stamp. For instance, for the time stamp $t1$ we have 7 conditions over the X variables of the agents and another 7 over the Y variables.
+\item The set of actions models the functions defining the possible updates of the agent variables between to subsequent time-stamps $t$ and $t+1$. 
+\end{enumerate}
 
+Figure~\ref{fig:plan} shows a three steps plan that is {\em compliant} with the agent model described in the previous example and the observations given in Figure~\ref{fig:observation}.
 
-\subsection{Tracking as Classical Planning}
-Here we show that the probability distribution $P(\lambda|\Omega,\mathcal{M})$ that solves a {\em Model-based Multi-Agent Tracking} can be estimated using an off-the-shelf classical planning problem.
 
 \begin{figure}
 \begin{scriptsize}
 \begin{verbatim}
-0: move-dec-x(ant1,l1,l0) move-dec-x(ant3,l15,l14) move-dec-x(ant8,l10,l9) move-dec-x(ant9,l11,l10) move-dec-y(ant1,l12,l11) move-dec-y(ant3,l14,l13) move-dec-y(ant7,l9,l8) move-inc-x(ant10,l4,l5) move-inc-x(ant2,l5,l6) move-inc-x(ant4,l1,l2) move-inc-x(ant5,l2,l3) move-inc-x(ant6,l4,l5) move-inc-x(ant7,l8,l9) move-inc-y(ant2,l4,l5) move-inc-y(ant4,l1,l2) move-inc-y(ant5,l3,l4) move-inc-y(ant6,l5,l6) move-inc-y(ant8,l2,l3) move-inc-y(ant9,l3,l4)
+0: dec-x(a1,l14,l13) dec-x(a2,l10,l9) dec-y(a3,l11,l10) 
+dec-y(a4,l13,l12) dec-y(a5,l8,l7) inc-x(a6,l5,l6) 
+inc-x(a7,l6,l7) inc-x(a8,l2,l3) inc-x(a9,l3,l4) 
+inc-x(a10,l5,l6) 
 
-1: move-dec-x(ant3,l14,l13) move-dec-x(ant9,l10,l9) move-dec-y(ant1,l11,l10) move-dec-y(ant3,l13,l12) move-dec-y(ant7,l8,l7) move-inc-x(ant10,l5,l6) move-inc-x(ant2,l6,l7) move-inc-x(ant4,l2,l3) move-inc-x(ant5,l3,l4) move-inc-x(ant6,l5,l6) move-inc-y(ant2,l5,l6) move-inc-y(ant4,l2,l3) move-inc-y(ant5,l4,l5) move-inc-y(ant6,l6,l7) move-inc-y(ant8,l3,l4) move-inc-y(ant9,l4,l5)
+1: dec-x(a1,l14,l13) dec-x(a2,l10,l9) dec-y(a3,l11,l10) 
+dec-y(a4,l13,l12) dec-y(a5,l8,l7) inc-x(a6,l5,l6) 
+inc-x(a7,l6,l7) inc-x(a8,l2,l3) inc-x(a9,l3,l4) 
+inc-x(a10,l5,l6) 
 
-2: move-dec-x(ant3,l13,l12) move-dec-y(ant1,l10,l9) move-dec-y(ant3,l12,l11) move-dec-y(ant7,l7,l6) move-inc-x(ant10,l6,l7) move-inc-x(ant2,l7,l8) move-inc-x(ant4,l3,l4) move-inc-x(ant5,l4,l5) move-inc-x(ant6,l6,l7) move-inc-y(ant2,l6,l7) move-inc-y(ant4,l3,l4) move-inc-y(ant5,l5,l6) move-inc-y(ant6,l7,l8) move-inc-y(ant8,l4,l5) move-inc-y(ant9,l5,l6)
-
-3: move-dec-x(ant3,l12,l11) move-dec-y(ant3,l11,l10) move-inc-x(ant10,l7,l8) move-inc-x(ant2,l8,l9) move-inc-x(ant4,l4,l5) move-inc-x(ant5,l5,l6) move-inc-x(ant6,l7,l8) move-inc-y(ant2,l7,l8) move-inc-y(ant4,l4,l5) move-inc-y(ant5,l6,l7) move-inc-y(ant6,l8,l9) move-inc-y(ant8,l5,l6)
-
-4: move-dec-x(ant2,l9,l8) move-dec-x(ant3,l11,l10) move-dec-x(ant9,l9,l8) move-dec-y(ant3,l10,l9) move-dec-y(ant9,l6,l5) move-inc-x(ant10,l8,l9) move-inc-x(ant4,l5,l6) move-inc-x(ant5,l6,l7) move-inc-x(ant6,l8,l9) move-inc-y(ant2,l8,l9) move-inc-y(ant4,l5,l6) move-inc-y(ant5,l7,l8) move-inc-y(ant8,l6,l7)
-
-5: move-dec-x(ant3,l10,l9) move-dec-x(ant9,l8,l7) move-dec-y(ant2,l9,l8) move-dec-y(ant3,l9,l8) move-inc-x(ant2,l8,l9) move-inc-x(ant4,l6,l7) move-inc-x(ant5,l7,l8) move-inc-y(ant4,l6,l7) move-inc-y(ant8,l7,l8)
-
-6: move-dec-x(ant7,l9,l8) move-dec-x(ant8,l9,l8) move-dec-y(ant10,l9,l8) move-dec-y(ant2,l8,l7) move-dec-y(ant3,l8,l7) move-inc-x(ant4,l7,l8) move-inc-x(ant5,l8,l9) move-inc-y(ant4,l7,l8) move-inc-y(ant5,l8,l9) move-inc-y(ant8,l8,l9)
-
-7: move-dec-x(ant3,l9,l8) move-dec-x(ant6,l9,l8) move-dec-y(ant6,l9,l8) move-inc-x(ant4,l8,l9) move-inc-x(ant7,l8,l9) move-inc-y(ant10,l8,l9) move-inc-y(ant2,l7,l8) move-inc-y(ant4,l8,l9)
-
-8: move-dec-x(ant3,l8,l7) move-dec-x(ant5,l9,l8) move-dec-x(ant8,l8,l7) move-dec-y(ant2,l8,l7) move-dec-y(ant5,l9,l8) move-dec-y(ant8,l9,l8) move-inc-y(ant6,l8,l9)
-
-9: move-dec-x(ant6,l8,l7) move-dec-x(ant7,l9,l8) move-dec-x(ant8,l7,l6) move-dec-x(ant9,l7,l6) move-dec-y(ant3,l7,l6)
-
-10: move-dec-x(ant3,l7,l6) move-dec-x(ant6,l7,l6) move-dec-x(ant7,l8,l7) move-dec-x(ant8,l6,l5) move-dec-x(ant9,l6,l5) move-dec-y(ant10,l9,l8) move-dec-y(ant2,l7,l6) move-dec-y(ant3,l6,l5) move-dec-y(ant7,l6,l5) move-inc-x(ant5,l8,l9) move-inc-y(ant5,l8,l9) move-inc-y(ant8,l8,l9)
-
-11: move-dec-x(ant3,l6,l5) move-dec-x(ant6,l6,l5) move-dec-x(ant7,l7,l6) move-dec-x(ant8,l5,l4) move-dec-x(ant9,l5,l4) move-dec-y(ant10,l8,l7) move-dec-y(ant2,l6,l5) move-dec-y(ant3,l5,l4) move-dec-y(ant7,l5,l4) move-inc-x(ant4,l9,l10) move-inc-y(ant5,l9,l10)
-
-12: move-dec-x(ant10,l9,l8) move-dec-x(ant3,l5,l4) move-dec-x(ant6,l5,l4) move-dec-x(ant7,l6,l5) move-dec-x(ant8,l4,l3) move-dec-x(ant9,l4,l3) move-dec-y(ant1,l9,l8) move-dec-y(ant10,l7,l6) move-dec-y(ant3,l4,l3) move-dec-y(ant7,l4,l3) move-inc-x(ant1,l0,l1) move-inc-x(ant4,l10,l11) move-inc-y(ant5,l10,l11) move-inc-y(ant8,l9,l10) move-inc-y(ant9,l5,l6)
-
-13: move-dec-x(ant10,l8,l7) move-dec-x(ant3,l4,l3) move-dec-x(ant6,l4,l3) move-dec-x(ant7,l5,l4) move-dec-x(ant8,l3,l2) move-dec-x(ant9,l3,l2) move-dec-y(ant1,l8,l7) move-dec-y(ant10,l6,l5) move-dec-y(ant2,l5,l4) move-dec-y(ant3,l3,l2) move-dec-y(ant7,l3,l2) move-inc-x(ant1,l1,l2) move-inc-x(ant4,l11,l12) move-inc-y(ant5,l11,l12) move-inc-y(ant8,l10,l11) move-inc-y(ant9,l6,l7)
-
-14: move-dec-x(ant10,l7,l6) move-dec-x(ant2,l9,l8) move-dec-x(ant3,l3,l2) move-dec-x(ant6,l3,l2) move-dec-x(ant7,l4,l3) move-dec-x(ant8,l2,l1) move-dec-x(ant9,l2,l1) move-dec-y(ant1,l7,l6) move-dec-y(ant10,l5,l4) move-dec-y(ant2,l4,l3) move-dec-y(ant3,l2,l1) move-dec-y(ant4,l9,l8) move-dec-y(ant7,l2,l1) move-inc-x(ant1,l2,l3) move-inc-x(ant4,l12,l13) move-inc-y(ant5,l12,l13) move-inc-y(ant6,l9,l10) move-inc-y(ant8,l11,l12) move-inc-y(ant9,l7,l8)
+2: dec-x(a1,l14,l13) dec-x(a2,l10,l9) dec-y(a3,l11,l10) 
+dec-y(a4,l13,l12) dec-y(a5,l8,l7) inc-x(a6,l5,l6) 
+inc-x(a7,l6,l7) inc-x(a8,l2,l3) inc-x(a9,l3,l4) 
+inc-x(a10,l5,l6) 
 \end{verbatim}
 \end{scriptsize}
- \caption{\small Plan simulating the movement of ten agents in a $15\times 15$ grid.}
+ \caption{\small Plan simulating the movement of ten agents in a grid.}
 \label{fig:plan}
 \end{figure}
+
+
+
+
+
+\subsection{Model-based Multi-agent Tracking with Classical Planning}
+Here we show that the probability distribution $P(\lambda|\Omega,\mathcal{M})$ that solves a {\em Model-based Multi-Agent Tracking} can be estimated using an off-the-shelf classical planning problem.
+
 
 \section{Evaluation: Ants tracking}
 \label{sec:evaluation}
