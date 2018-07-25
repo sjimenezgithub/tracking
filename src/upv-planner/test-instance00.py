@@ -79,8 +79,8 @@ solution_node = p.solve_BFWS()
 
 if solution_node !=None:
     solution_node.get_path_info(t)
-print solution_node
-print t
+    print solution_node
+    print t
 sys.exit(0)
 
 
