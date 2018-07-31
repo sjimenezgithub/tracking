@@ -11,7 +11,7 @@ def subgoal0(state):
     return (state[12][0]==1)
 
 def subgoal1(state):
-    return (state[13][0]==1)
+    return (state[12][0]==1)
     
 # Actions   
 def inc_V0(state):
@@ -43,11 +43,11 @@ def visit_V0_V1(state):
 # Creating the task
 t = Task.Task()
 
-t.load_state_variable(0,GRID_SIZE)
-t.load_state_variable(0,GRID_SIZE)
+t.load_state_variable(0,range(GRID_SIZE))
+t.load_state_variable(0,range(GRID_SIZE))
 for i in range(0,GRID_SIZE):
     for j in range(0,GRID_SIZE):    
-        t.load_state_variable(0,1)
+        t.load_state_variable(0,range(2))
 
 t.load_subgoal_function(subgoal0)
 t.load_subgoal_function(subgoal1)

@@ -53,7 +53,7 @@ def constraint0(state):
 t = Task.Task()
 
 for i in range(0,MAX_VARS):
-    t.load_state_variable(0,MAX_VAL)
+    t.load_state_variable(0,range(MAX_VAL))
 
 t.load_subgoal_function(subgoal0)
 t.load_subgoal_function(subgoal1)
