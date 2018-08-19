@@ -90,9 +90,9 @@ class heuristic_Node(Node):
         return self.h_subgoals(task) * task.nrelevants + self.h_relevantAtoms(task)
 
     
-    def h_novelty(self,task):
+    def f_novelty(self,task):
         if self.heuristic_novelty_test(task) == 1:
-            return self.h_subgoals(task) * task.nrelevants + self.h_relevantAtoms(task)
+            return self.h_subgoals(task) * task.nrelevants + self.h_relevantAtoms(task) 
         else:
-            return len(task.subgoal_functions) * task.nrelevants + self.h_relevantAtoms(task)
+            return len(task.subgoal_functions) * task.nrelevants + self.h_relevantAtoms(task) 
 
