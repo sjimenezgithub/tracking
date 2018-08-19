@@ -46,7 +46,7 @@ class Task:
         
         checked = set([])        
         aux_node = solution_node
-        while aux_node != None:
+        while aux_node.parent != None:
             self.plan = [aux_node.action] + self.plan
             for i in range(len(aux_node.state)):
                 index = self.offsets[i] + aux_node.state[i][0]
@@ -54,6 +54,11 @@ class Task:
                     self.relevantAtoms[index]=True
                     checked.add(index)
             aux_node = aux_node.parent
+
+        # Atoms in the initial state are not relevant
+        for i in range(len(aux_node.state)):
+            index = self.offsets[i] + aux_node.state[i][0]
+            self.relevantAtoms[index]=False        
             
         self.nrelevants = self.relevantAtoms.count(True)
 

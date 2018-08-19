@@ -58,7 +58,7 @@ class Planner_BFWS:
         closed_set = set([])
         self.task.ngenerated = 1
 
-        best_h = root_node.h
+        best_h = root_node.h_novelty(self.task)
         
         # Search                
         while(open_set):
@@ -67,11 +67,11 @@ class Planner_BFWS:
             node = min(open_set, key=lambda o:o.h_novelty(self.task))
             open_set.remove(node)
             closed_set.add(str(node.state))
-            if node.h < best_h:
+            if node.h_novelty(self.task) < best_h:
                 print "Best heuristic value found: " + str(node.h)
-                best_h = node.h 
+                best_h = node.h_novelty(self.task)
             
- 
+            # expand node
             succesor_nodes = [Node.heuristic_Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state)),self.task) for i in range(0,len(self.task.sucessor_functions))] 
             for succesor in succesor_nodes:
 
