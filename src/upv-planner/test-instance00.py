@@ -5,23 +5,23 @@ from planner import Task, Planner_IW1, Planner_BFWS
       
 # Instance 00
 MAX_VARS=3
-MAX_VAL=50
+MAX_VAL=100
 
 # Goal Conditions
 def subgoal0(state):
-    if (state[0][0]==39):
+    if (state[0][0]==89):
         return True
     else:
         return False
 
 def subgoal1(state):
-    if (state[1][0]==25):
+    if (state[1][0]==12):
         return True
     else:
         return False    
 
 def subgoal2(state):
-    if (state[2][0]==25):
+    if (state[2][0]==75):
         return True
     else:
         return False
@@ -57,7 +57,7 @@ def dec_V2(state):
 t = Task.Task()
 
 for i in range(0,MAX_VARS):
-    t.load_state_variable(25,range(MAX_VAL))
+    t.load_state_variable(50,range(MAX_VAL))
 
 t.load_subgoal_function(subgoal0)
 t.load_subgoal_function(subgoal1)

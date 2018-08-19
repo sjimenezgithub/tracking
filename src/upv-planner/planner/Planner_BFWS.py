@@ -20,7 +20,7 @@ class Planner_BFWS:
             # Creating the sub-task            
             t_g = Task.Task()                     
             for i in range(len(self.task.variables)):                            
-                 t_g.load_state_variable(0,self.task.domains[i])
+                 t_g.load_state_variable(self.task.variables[i][0],self.task.domains[i])
             for f in self.task.sucessor_functions:
                 t_g.load_succesor_function(f)
             for f in self.task.constraint_functions:
