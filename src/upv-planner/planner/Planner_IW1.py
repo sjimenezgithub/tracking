@@ -14,7 +14,8 @@ class Planner_IW1:
                            
                 
     def solve_IW1(self):
-
+        print ("Starting IW1 search")
+        
         # Root node
         root_node = Node.Node(None,"-Init-",copy.deepcopy(self.task.variables))
 

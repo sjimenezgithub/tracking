@@ -29,10 +29,10 @@ class Planner_BFWS:
             # Addressing the sub-task with IW1
             p = Planner_IW1.Planner_IW1(t_g)
             solution_node = p.solve_IW1()
-            solution_node.get_relevant_atoms(t_g)
 
             # Merge the found relevant atoms
             if solution_node != None:
+                solution_node.get_relevant_atoms(t_g)
                 for index in range(len(self.task.relevantAtoms)):
                     if self.task.relevantAtoms[index] == False and t_g.relevantAtoms[index] == True:
                         self.task.relevantAtoms[index] = True
@@ -46,11 +46,12 @@ class Planner_BFWS:
                     self.task.nrelevants = self.task.nrelevants + 1
 
         print ("Initializing hmax novelty tables")                        
-        self.task.IW1table = [False for i in range(self.task.nrelevants + 1) * (self.task.offsets[-1] + len(self.task.domains[-1]))]
+        self.task.IW1table = [False for i in range(self.task.nrelevants + 1) * (self.task.offsets[-1] + len(self.task.domains[-1]))]        
 
                 
     def solve_BFWS(self):
-
+        print ("Starting BFWS search")
+        
         # Root node
         root_node = Node.heuristic_Node(None,"-Init-",copy.deepcopy(self.task.variables),self.task)            
 

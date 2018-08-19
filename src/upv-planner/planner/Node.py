@@ -51,7 +51,6 @@ class Node:
            
     def get_relevant_atoms(self,task):       
         task.relevantAtoms =  [False for i in range(task.offsets[-1] + len(task.domains[-1]))]
-
         aux_node = self
         while aux_node != None:
             task.plan = [aux_node.action] + task.plan
@@ -59,8 +58,6 @@ class Node:
                 index = task.offsets[i] + aux_node.state[i][0]                    
                 task.relevantAtoms[index] = True
             aux_node = aux_node.parent            
-        return    
-
 
     
 class heuristic_Node(Node):

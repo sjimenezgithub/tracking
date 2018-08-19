@@ -68,13 +68,11 @@ t.load_constraint_function(constraint0)
 
 # Running the IW1 planner on the task
 #p = Planner_IW1.Planner_IW1(t)
-#print ("Starting IW1 search")
 #solution_node = p.solve_IW1()
 
 
 # Running the BFS planner on the task
-p = Planner_BFWS.Planner_BFWS(t)
-print ("Starting BFWS search")            
+p = Planner_BFWS.Planner_BFWS(t)            
 solution_node = p.solve_BFWS()
 
 if solution_node !=None:
