@@ -50,11 +50,15 @@ class Planner_BFWS:
         print ("Starting BFWS search")
         
         # Root node
-        root_node = Node.heuristic_Node(None,"-Init-",copy.deepcopy(self.task.variables),self.task)            
+        root_node = Node.heuristic_Node(None,"-Init-",copy.deepcopy(self.task.variables),self.task)
+        if root_node.get_achieved_subgoals(self.task) == len(self.task.subgoal_functions):                                        
+            return root_node        
 
         open_set = set([root_node])
         closed_set = set([])
         self.task.ngenerated = 1
+
+        best_h = root_node.h
         
         # Search                
         while(open_set):
@@ -63,6 +67,10 @@ class Planner_BFWS:
             node = min(open_set, key=lambda o:o.h_novelty(self.task))
             open_set.remove(node)
             closed_set.add(str(node.state))
+            if node.h < best_h:
+                print "Best heuristic value found: " + str(node.h)
+                best_h = node.h 
+            
  
             succesor_nodes = [Node.heuristic_Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state)),self.task) for i in range(0,len(self.task.sucessor_functions))] 
             for succesor in succesor_nodes:

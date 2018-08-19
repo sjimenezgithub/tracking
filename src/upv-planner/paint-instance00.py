@@ -28,23 +28,20 @@ def subgoal5(state):
     
 # Actions   
 def inc_V0(state):
-    if state[0][0] < (GRID_SIZE-1):
-        state[0][0] = (state[0][0]+1)
-    return state
-
-def inc_V1(state):
-    if state[1][0] < (GRID_SIZE-1):
-        state[1][0] = (state[1][0]+1)
+    state[0][0]=(state[0][0]+1)%GRID_SIZE
     return state
 
 def dec_V0(state):
-    if state[0][0] > 0:
-        state[0][0] = (state[0][0]-1)
+    state[0][0]=(state[0][0]-1)%GRID_SIZE
     return state
 
+    
+def inc_V1(state):
+    state[1][0]=(state[1][0]+1)%GRID_SIZE
+    return state    
+
 def dec_V1(state):
-    if state[1][0]  > 0:
-        state[1][0] = (state[1][0]-1)
+    state[1][0]=(state[1][0]-1)%GRID_SIZE
     return state
 
 def visit_V0_V1(state):
