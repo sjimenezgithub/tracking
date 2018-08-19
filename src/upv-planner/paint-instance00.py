@@ -81,9 +81,9 @@ p = Planner_BFWS.Planner_BFWS(t)
 solution_node = p.solve_BFWS()
 
 if solution_node != None:
-    t.get_relevant_atoms(solution_node)
-    print solution_node
+    t.get_plan_relevant_atoms(solution_node)
     print t
+    print solution_node
 sys.exit(0)
 
 

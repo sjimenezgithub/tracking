@@ -8,21 +8,23 @@ class Planner_IW1:
     
     def __init__(self,t):
         self.task = t 
-        
-        print ("Initializing novelty table")
-        self.task.IW1table = [False for i in range(self.task.offsets[-1] + len(self.task.domains[-1]))]
-                           
+                                   
                 
     def solve_IW1(self):
-        print ("Starting IW1 search")
         
+        print ("Initializing IW1 novelty table")
+        self.task.IW1table = [False for i in range(self.task.offsets[-1] + len(self.task.domains[-1]))]
+
+        
+        print ("Starting IW1 search")        
         # Root node
+        self.task.ngenerated = 1
         root_node = Node.Node(None,"-Init-",copy.deepcopy(self.task.variables))
+        if root_node.get_achieved_subgoals(self.task) == len(self.task.subgoal_functions):                                        
+            return root_node        
 
         root_node.novelty_test(self.task)
-        open_list = [root_node]
-        self.task.ngenerated = 1
-        
+        open_list = [root_node]        
         # Search                
         while(open_list):
 

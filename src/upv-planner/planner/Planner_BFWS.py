@@ -10,11 +10,12 @@ class Planner_BFWS:
         
         self.task = t
         
-        print ("Initializing relevance table")
+        print ("Initializing BFWS relevance table")
         self.task.relevantAtoms = [False for i in range(self.task.offsets[-1] + len(self.task.domains[-1]))]
         
-        # Computing the relevant atoms for each subgoal                 
-        for g in self.task.subgoal_functions:
+        # Computing the relevant atoms for each subgoal
+        for g in range(len(self.task.subgoal_functions)):
+            print (" --- subtask" + str(g) + " ---")
 
             # Creating the sub-task            
             t_g = Task.Task()                     
@@ -24,7 +25,7 @@ class Planner_BFWS:
                 t_g.load_succesor_function(f)
             for f in self.task.constraint_functions:
                 t_g.load_constraint_function(f)                                
-            t_g.load_subgoal_function(g)
+            t_g.load_subgoal_function(self.task.subgoal_functions[g])
 
             # Addressing the sub-task with IW1
             p = Planner_IW1.Planner_IW1(t_g)
@@ -32,15 +33,16 @@ class Planner_BFWS:
 
             # Merge the found relevant atoms
             if solution_node != None:
-                nrel = t_g.get_relevant_atoms(solution_node)
-                print ("Relevant atoms found: " + str(nrel))
-                self.task.nrelevants = self.task.nrelevants + nrel
+                t_g.get_plan_relevant_atoms(solution_node)
+                print ("Relevant atoms found: " + str(t_g.nrelevants))
+                print ("Subplan found: " + str(t_g.plan))
                 for index in range(len(self.task.relevantAtoms)):
                     if self.task.relevantAtoms[index] == False and t_g.relevantAtoms[index] == True:
                         self.task.relevantAtoms[index] = True
 
-        print ("Initializing hmax novelty tables")
-        H_MAX = t.nrelevants + 1
+        print ("\nInitializing hmax novelty tables")
+        self.task.nrelevants = self.task.relevantAtoms.count(True)
+        H_MAX = self.task.nrelevants + 1
         self.task.IW1table = [False for i in range(H_MAX) * (self.task.offsets[-1] + len(self.task.domains[-1]))]        
 
                 

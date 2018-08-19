@@ -40,6 +40,23 @@ class Task:
     def load_constraint_function(self,f):
         self.constraint_functions = self.constraint_functions + [f]        
         
+
+    def get_plan_relevant_atoms(self, solution_node):
+        self.relevantAtoms =  [False for i in range(self.offsets[-1] + len(self.domains[-1]))]
+        
+        checked = set([])        
+        aux_node = solution_node
+        while aux_node != None:
+            self.plan = [aux_node.action] + self.plan
+            for i in range(len(aux_node.state)):
+                index = self.offsets[i] + aux_node.state[i][0]
+                if (not index in checked):
+                    self.relevantAtoms[index]=True
+                    checked.add(index)
+            aux_node = aux_node.parent
+            
+        self.nrelevants = self.relevantAtoms.count(True)
+
         
     def __str__(self):
         sout="\n"
@@ -53,14 +70,14 @@ class Task:
         sout = sout + "Generated nodes: " + str(self.ngenerated) + "\n"
         
         if self.plan!=[]:
-            sout = sout + "Solution plan (" + str(len(self.plan)) + " actions):" 
+            sout = sout + "Solution plan (" + str(len(self.plan)-1) + " actions):" 
             for a in self.plan:
                 sout = sout + " " + a
                 
         sout = sout + "\n"
         
         if self.relevantAtoms!=[]:
-            sout = sout + str(self.nrelevants) + " Relevant Atoms (" + str(self.relevantAtoms.count(True)) + "):"
+            sout = sout + "Relevant Atoms (" + str(self.nrelevants) + "):"
             i=0
             j=0
             for index in range(len(self.relevantAtoms)):                    
@@ -75,17 +92,4 @@ class Task:
         return sout
 
     
-    def get_relevant_atoms(self, solution_node):
-        self.relevantAtoms =  [False for i in range(self.offsets[-1] + len(self.domains[-1]))]
-        
-        checked = set([])        
-        aux_node = solution_node
-        while aux_node != None:
-            for i in range(len(aux_node.state)):
-                index = self.offsets[i]+aux_node.state[i][0]
-                if (not index in checked):
-                    self.relevantAtoms[index]=True
-                    checked.add(index)
-            aux_node = aux_node.parent
-        return len(checked)
 
