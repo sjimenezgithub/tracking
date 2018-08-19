@@ -1,9 +1,8 @@
 #! /usr/bin/env python
-import sys, copy
 import Task
 
-
 class Node:
+    
     def __init__(self,p,a,s):
         self.parent = p
         self.action = a        
@@ -14,7 +13,7 @@ class Node:
         sout = ""
         sout = sout + str(self.action) + "\n"       
         
-        for index in range(0,len(self.state)):
+        for index in range(len(self.state)):
             sout = sout + "V" + str(index) +" :" + str(self.state[index]) + "\n"
                        
         return sout
@@ -23,9 +22,9 @@ class Node:
     def novelty_test(self,task):
         novelty = 0
         for i in range(0,len(self.state)):
-            index=task.offsets[i]+self.state[i][0]
+            index = task.offsets[i] + self.state[i][0]
             if task.IW1table[index]==False:
-                task.IW1table[index]=True
+                task.IW1table[index] = True
                 novelty = 1            
         return novelty
                             
@@ -34,34 +33,31 @@ class Node:
         achieved_subgoals=0
         for f in task.subgoal_functions:
             if f(self.state):
-                achieved_subgoals=achieved_subgoals+1
+                achieved_subgoals = achieved_subgoals + 1
         return achieved_subgoals
     
 
     def get_achieved_relevance(self,task):        
-        rel = 0
-        checked = set([])
-        
+        checked = set([])        
         aux_node = self
         while aux_node != None:
-            for i in range(0,len(aux_node.state)):
+            for i in range(len(aux_node.state)):
                 index = task.offsets[i]+aux_node.state[i][0]
                 if task.relevantAtoms[index]==True and (not index in checked):
-                    rel = rel + 1
                     checked.add(index)
             aux_node = aux_node.parent
-        return rel
+        return len(checked)
     
            
-    def get_path_info(self,task):       
+    def get_relevant_atoms(self,task):       
         task.relevantAtoms =  [False for i in range(task.offsets[-1] + len(task.domains[-1]))]
 
         aux_node = self
         while aux_node != None:
             task.plan = [aux_node.action] + task.plan
             for i in range(0,len(aux_node.state)):
-                index=task.offsets[i]+aux_node.state[i][0]                    
-                task.relevantAtoms[index]=True
+                index = task.offsets[i] + aux_node.state[i][0]                    
+                task.relevantAtoms[index] = True
             aux_node = aux_node.parent            
         return    
 
@@ -81,15 +77,15 @@ class heuristic_Node(Node):
 
     def __str__(self):
         sout =  Node.__str__(self)
-        sout = sout + "g:" + str(self.g) + "\n"
-        sout = sout + "h:" + str(self.h) + "\n"                       
+        sout = sout + "g: " + str(self.g) + "\n"
+        sout = sout + "h: " + str(self.h) + "\n"                       
         return sout        
 
 
     def heuristic_novelty_test(self, task):
         novelty = 0
         offset = self.h * (task.offsets[-1] + len(task.domains[-1]))
-        for i in range(0,len(self.state)):
+        for i in range(len(self.state)):
             index = offset + task.offsets[i] + self.state[i][0]
             if task.IW1table[index] == False:
                 task.IW1table[index] = True
@@ -110,5 +106,3 @@ class heuristic_Node(Node):
             return self.h_relevantAtoms(task)
         else:
             return task.nrelevants + self.h_relevantAtoms(task)         
-
-    

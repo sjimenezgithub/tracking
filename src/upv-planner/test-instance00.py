@@ -78,7 +78,7 @@ print ("Starting BFWS search")
 solution_node = p.solve_BFWS()
 
 if solution_node !=None:
-    solution_node.get_path_info(t)
+    solution_node.get_relevant_atoms(t)
     print solution_node
     print t
 sys.exit(0)

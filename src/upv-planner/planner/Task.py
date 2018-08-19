@@ -20,14 +20,15 @@ class Task:
         self.IW1table = []
                 
         
-    def load_state_variable(self,v,d):
-        self.domains = self.domains + [range(d)]        
-        self.variables = self.variables + [[self.domains[-1][v]]]
-        if self.offsets == []:
-            self.offsets = self.offsets + [0]
-        else:
-            acc = self.offsets[-1] + len(self.domains[-2])
-            self.offsets = self.offsets + [acc]
+    def load_state_variable(self,value,domain):
+        if (value in domain):
+            self.domains = self.domains + [domain]        
+            self.variables = self.variables + [[value]]
+            if self.offsets == []:
+                self.offsets = self.offsets + [0]
+            else:
+                acc = self.offsets[-1] + len(self.domains[-2])
+                self.offsets = self.offsets + [acc]
 
         
     def load_succesor_function(self,f):

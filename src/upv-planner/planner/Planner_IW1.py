@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-import copy, numpy
+import copy
 import Node
 
 MAX_NODES = 100000
@@ -17,8 +17,6 @@ class Planner_IW1:
 
         # Root node
         root_node = Node.Node(None,"-Init-",copy.deepcopy(self.task.variables))
-        if root_node.get_achieved_subgoals(self.task) == len(self.task.subgoal_functions):
-            return root_node
 
         root_node.novelty_test(self.task)
         open_list = [root_node]
