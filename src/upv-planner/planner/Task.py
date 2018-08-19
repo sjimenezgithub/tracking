@@ -16,7 +16,7 @@ class Task:
         self.relevantAtoms = []
         self.nrelevants = 0
         self.IW1table = []
-                
+                        
         
     def load_state_variable(self,value,domain):
         if (value in domain):
@@ -73,5 +73,19 @@ class Task:
                     j = j + 1
                                                                 
         return sout
+
+    
+    def get_relevant_atoms(self, solution_node):
+        self.relevantAtoms =  [False for i in range(self.offsets[-1] + len(self.domains[-1]))]
         
+        checked = set([])        
+        aux_node = solution_node
+        while aux_node != None:
+            for i in range(len(aux_node.state)):
+                index = self.offsets[i]+aux_node.state[i][0]
+                if (not index in checked):
+                    self.relevantAtoms[index]=True
+                    checked.add(index)
+            aux_node = aux_node.parent
+        return len(checked)
 

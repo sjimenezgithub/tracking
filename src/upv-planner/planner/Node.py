@@ -47,18 +47,7 @@ class Node:
                     checked.add(index)
             aux_node = aux_node.parent
         return len(checked)
-    
-           
-    def get_relevant_atoms(self,task):       
-        task.relevantAtoms =  [False for i in range(task.offsets[-1] + len(task.domains[-1]))]
-        aux_node = self
-        while aux_node != None:
-            task.plan = [aux_node.action] + task.plan
-            for i in range(0,len(aux_node.state)):
-                index = task.offsets[i] + aux_node.state[i][0]                    
-                task.relevantAtoms[index] = True
-            aux_node = aux_node.parent            
-
+               
     
 class heuristic_Node(Node):
     def __init__(self,p,a,s,task):
@@ -100,6 +89,7 @@ class heuristic_Node(Node):
     
     def h_novelty(self,task):
         if self.heuristic_novelty_test(task) == 1:
-            return self.h_relevantAtoms(task)
+            return self.h_subgoals(task) * task.nrelevants + self.h_relevantAtoms(task)
         else:
-            return task.nrelevants + self.h_relevantAtoms(task)         
+            return len(task.subgoal_functions) * task.nrelevants + self.h_relevantAtoms(task)
+

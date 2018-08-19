@@ -65,8 +65,9 @@ for i in range(0,GRID_SIZE):
 t.load_subgoal_function(subgoal0)
 t.load_subgoal_function(subgoal1)
 t.load_subgoal_function(subgoal2)
-
-
+t.load_subgoal_function(subgoal3)
+t.load_subgoal_function(subgoal4)
+t.load_subgoal_function(subgoal5)
 
 t.load_succesor_function(inc_V0)
 t.load_succesor_function(inc_V1)
@@ -80,7 +81,7 @@ p = Planner_BFWS.Planner_BFWS(t)
 solution_node = p.solve_BFWS()
 
 if solution_node != None:
-    solution_node.get_relevant_atoms(t)
+    t.get_relevant_atoms(solution_node)
     print solution_node
     print t
 sys.exit(0)
