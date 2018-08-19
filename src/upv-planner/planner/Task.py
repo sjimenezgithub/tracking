@@ -1,7 +1,5 @@
 #! /usr/bin/env python
-import copy
 from timeit import default_timer as timer
-
 
 class Task:
     
@@ -55,14 +53,14 @@ class Task:
         sout = sout + "Generated nodes: " + str(self.ngenerated) + "\n"
         
         if self.plan!=[]:
-            sout = sout + "Solution plan:" 
+            sout = sout + "Solution plan (" + str(len(self.plan)) + " actions):" 
             for a in self.plan:
                 sout = sout + " " + a
                 
         sout = sout + "\n"
         
         if self.relevantAtoms!=[]:
-            sout = sout + str(self.nrelevants) + " Relevant Atoms:"
+            sout = sout + str(self.nrelevants) + " Relevant Atoms (" + str(self.relevantAtoms.count(True)) + "):"
             i=0
             j=0
             for index in range(len(self.relevantAtoms)):                    

@@ -93,4 +93,3 @@ class Planner_BFWS:
                                             
         print "Goal not found: search space exhausted \n"                
         return None
-
