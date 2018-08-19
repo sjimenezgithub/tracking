@@ -59,12 +59,9 @@ class Task:
 
         
     def __str__(self):
-        sout="\n"
-        for index in range(0,len(self.domains)):
-            sout = sout + "V" + str(index) +": " + str(self.domains[index]) + "\n"
-        
+        sout="\n"       
         for index in range(0,len(self.variables)):
-            sout = sout + "Init V" + str(index) +": " + str(self.variables[index]) + "\n"
+            sout = sout + "V" + str(index) +" inited to " + str(self.variables[index]) + " in Domain " + str(self.domains[index]) + "\n"
 
         sout = sout + "Elapsed Time: " + str(timer()-self.time_stamp) + "\n"
         sout = sout + "Generated nodes: " + str(self.ngenerated) + "\n"
