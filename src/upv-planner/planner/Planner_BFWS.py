@@ -42,7 +42,7 @@ class Planner_BFWS:
 
         print ("\nInitializing hmax novelty tables")
         self.task.nrelevants = self.task.relevantAtoms.count(True)
-        H_MAX = self.task.nrelevants + 1
+        H_MAX = len(self.task.subgoal_functions) * self.task.nrelevants + self.task.nrelevants + 1 
         self.task.IW1table = [False for i in range(H_MAX) * (self.task.offsets[-1] + len(self.task.domains[-1]))]        
 
                 

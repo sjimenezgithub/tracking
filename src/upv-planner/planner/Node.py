@@ -58,7 +58,7 @@ class heuristic_Node(Node):
         else:
             self.g = self.parent.g + 1            
 
-        self.h = self.h_relevantAtoms(task)
+        self.h = self.h_subgoals_relAtoms(task)
 
 
     def __str__(self):
@@ -85,6 +85,9 @@ class heuristic_Node(Node):
     
     def h_relevantAtoms(self,task):
         return task.nrelevants - self.get_achieved_relevance(task)
+
+    def h_subgoals_relAtoms(self,task):
+        return self.h_subgoals(task) * task.nrelevants + self.h_relevantAtoms(task)
 
     
     def h_novelty(self,task):
