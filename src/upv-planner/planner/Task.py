@@ -7,8 +7,13 @@ class Task:
         self.domains = []
         self.variables = []
         self.offsets = []
+        
         self.sucessor_functions = []
+        self.sucessor_indexes = []
+                
         self.subgoal_functions = []
+        self.subgoal_indexes = []        
+        
         self.constraint_functions = []        
         self.ngenerated = 0
         self.time_stamp = timer()
@@ -30,16 +35,18 @@ class Task:
                 self.offsets = self.offsets + [acc]
 
         
-    def load_succesor_function(self,f):
+    def load_succesor_function(self,f,i):
         self.sucessor_functions = self.sucessor_functions + [f]
+        self.sucessor_indexes = self.sucessor_indexes + [i]
 
         
-    def load_subgoal_function(self,f):
+    def load_subgoal_function(self,f,i):
         self.subgoal_functions = self.subgoal_functions + [f]
+        self.subgoal_indexes = self.subgoal_indexes + [i]        
 
         
     def load_constraint_function(self,f):
-        self.constraint_functions = self.constraint_functions + [f]        
+        self.constraint_functions = self.constraint_functions + [f]
         
 
     def get_plan_relevant_atoms(self, solution_node):
@@ -48,7 +55,7 @@ class Task:
         checked = set([])        
         aux_node = solution_node
         while aux_node.parent != None:
-            self.plan = [aux_node.action] + self.plan
+            self.plan = [self.sucessor_functions[aux_node.action].__name__] + self.plan
             for i in range(len(aux_node.state)):
                 index = self.offsets[i] + aux_node.state[i][0]
                 if (not index in checked):

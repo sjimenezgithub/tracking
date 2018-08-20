@@ -19,7 +19,7 @@ class Planner_IW1:
         print ("Starting IW1 search")        
         # Root node
         self.task.ngenerated = 1
-        root_node = Node.Node(None,"-Init-",copy.deepcopy(self.task.variables))
+        root_node = Node.Node(None, None, copy.deepcopy(self.task.variables))
         if root_node.get_achieved_subgoals(self.task) == len(self.task.subgoal_functions):                                        
             return root_node        
 
@@ -30,7 +30,7 @@ class Planner_IW1:
 
             node = open_list.pop(0)
  
-            succesor_nodes = [Node.Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state))) for i in range(len(self.task.sucessor_functions))]
+            succesor_nodes = [Node.Node(node, i, self.task.sucessor_functions[i](copy.deepcopy(node.state))) for i in range(len(self.task.sucessor_functions))]
             
             for succesor in succesor_nodes:
                 # Constraint test

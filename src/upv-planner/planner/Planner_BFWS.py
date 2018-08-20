@@ -30,11 +30,11 @@ class Planner_BFWS:
             t_g = Task.Task()                     
             for i in range(len(self.task.variables)):                            
                  t_g.load_state_variable(self.task.variables[i][0],self.task.domains[i])
-            for f in self.task.sucessor_functions:
-                t_g.load_succesor_function(f)
+            for i in range(len(self.task.sucessor_functions)):
+                t_g.load_succesor_function(self.task.sucessor_functions[i],self.task.sucessor_indexes[i])
             for f in self.task.constraint_functions:
                 t_g.load_constraint_function(f)                                
-            t_g.load_subgoal_function(self.task.subgoal_functions[g])
+            t_g.load_subgoal_function(self.task.subgoal_functions[g],self.task.sucessor_indexes[g])
 
             # Addressing the sub-task with IW1
             p = Planner_IW1.Planner_IW1(t_g)
@@ -50,7 +50,7 @@ class Planner_BFWS:
                         self.task.relevantAtoms[index] = True
 
                         
-    # Work in progress
+    # !!! Work in progress !!!
     def get_relevantAtoms_with_RP(self):
         # get sucessors
         states = [self.task.sucessor_functions[i](copy.deepcopy(self.task.variables)) for i in range(len(self.task.sucessor_functions))]
@@ -67,7 +67,8 @@ class Planner_BFWS:
         for i in range(len(self.task.variables)):
             problem.addVariable("V" + str(i), sets[i])
 
-#        problem.addConstraint(lambda a, b: a*2 == b, ("a", "b"))            
+        for g in range(len(self.task.subgoal_functions)):            
+            problem.addConstraint(lambda a, b: a*2 == b, ("a", "b"))            
             
         problem.getSolutions()
             
@@ -77,7 +78,7 @@ class Planner_BFWS:
         print ("Starting BFWS search")
         
         # Root node
-        root_node = Node.heuristic_Node(None,"-Init-",copy.deepcopy(self.task.variables),self.task)
+        root_node = Node.heuristic_Node(None,None,copy.deepcopy(self.task.variables),self.task)
         if root_node.get_achieved_subgoals(self.task) == len(self.task.subgoal_functions):                                        
             return root_node        
 
@@ -98,7 +99,7 @@ class Planner_BFWS:
                 best_h = node.f_novelty(self.task)
             
             # expand node
-            succesor_nodes = [Node.heuristic_Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state)),self.task) for i in range(len(self.task.sucessor_functions))] 
+            succesor_nodes = [Node.heuristic_Node(node,i,self.task.sucessor_functions[i](copy.deepcopy(node.state)),self.task) for i in range(len(self.task.sucessor_functions))] 
             for succesor in succesor_nodes:
 
                 # Duplicate nodes test                

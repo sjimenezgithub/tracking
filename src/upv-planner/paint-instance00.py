@@ -59,18 +59,18 @@ for i in range(0,GRID_SIZE):
     for j in range(0,GRID_SIZE):    
         t.load_state_variable(0,range(2))
 
-t.load_subgoal_function(subgoal0)
-t.load_subgoal_function(subgoal1)
-t.load_subgoal_function(subgoal2)
-t.load_subgoal_function(subgoal3)
-t.load_subgoal_function(subgoal4)
-t.load_subgoal_function(subgoal5)
+t.load_subgoal_function(subgoal0,[12])
+t.load_subgoal_function(subgoal1,[13])
+t.load_subgoal_function(subgoal2,[14])
+t.load_subgoal_function(subgoal3,[15])
+t.load_subgoal_function(subgoal4,[16])
+t.load_subgoal_function(subgoal5,[17])
 
-t.load_succesor_function(inc_V0)
-t.load_succesor_function(inc_V1)
-t.load_succesor_function(dec_V0)
-t.load_succesor_function(dec_V1)
-t.load_succesor_function(visit_V0_V1)
+t.load_succesor_function(inc_V0, [0])
+t.load_succesor_function(dec_V0, [0])
+t.load_succesor_function(inc_V1, [1])
+t.load_succesor_function(dec_V1, [1])
+t.load_succesor_function(visit_V0_V1, [0,1])
 
 
 # Running the BFS planner on the task

@@ -2,83 +2,52 @@
 import sys, copy
 import planner
 from planner import Task, Planner_IW1, Planner_BFWS
-      
+
 # Instance 00
 MAX_VARS=5
 MAX_VAL=100
 
+
 # Goal Conditions
-def subgoal0(state):
-    if (state[0][0]==89):
+def eq0(X):
+    if (X==89):
         return True
     else:
         return False
 
-def subgoal1(state):
-    if (state[1][0]==12):
+def eq1(X):
+    if (X==12):
         return True
     else:
         return False    
 
-def subgoal2(state):
-    if (state[2][0]==75):
+def eq2(X):
+    if (X==75):
         return True
     else:
         return False
 
-def subgoal3(state):
-    if (state[3][0]==65):
+def eq3(X):
+    if (X==65):
         return True
     else:
         return False
 
-def subgoal4(state):
-    if (state[4][0]==5):
+def eq4(X):
+    if (X==5):
         return True
     else:
         return False        
 
     
-# Actions   
-def inc_V0(state):
-    state[0][0]=(state[0][0]+1)%MAX_VAL
-    return state
+# Actions
+def inc(X):
+    X = (X+1)%MAX_VAL
+    return X
 
-def dec_V0(state):
-    state[0][0]=(state[0][0]-1)%MAX_VAL
-    return state
-
-def inc_V1(state):
-    state[1][0]=(state[1][0]+1)%MAX_VAL
-    return state
-
-def dec_V1(state):
-    state[1][0]=(state[1][0]-1)%MAX_VAL
-    return state
-
-def inc_V2(state):
-    state[2][0]=(state[2][0]+1)%MAX_VAL
-    return state
-
-def dec_V2(state):
-    state[2][0]=(state[2][0]-1)%MAX_VAL
-    return state
-
-def inc_V3(state):
-    state[3][0]=(state[3][0]+1)%MAX_VAL
-    return state
-
-def dec_V3(state):
-    state[3][0]=(state[3][0]-1)%MAX_VAL
-    return state
-
-def inc_V4(state):
-    state[4][0]=(state[4][0]+1)%MAX_VAL
-    return state
-
-def dec_V4(state):
-    state[4][0]=(state[4][0]-1)%MAX_VAL
-    return state
+def dec(X):
+    X = (X-1)%MAX_VAL
+    return X
 
 
 # Creating the task
@@ -87,22 +56,35 @@ t = Task.Task()
 for i in range(0,MAX_VARS):
     t.load_state_variable(50,range(MAX_VAL))
 
-t.load_subgoal_function(subgoal0)
-t.load_subgoal_function(subgoal1)
-t.load_subgoal_function(subgoal2)
-t.load_subgoal_function(subgoal3)
-t.load_subgoal_function(subgoal4)
+t.load_subgoal_function(eq0,[0])
+t.load_subgoal_function(eq1,[1])
+t.load_subgoal_function(eq2,[2])
+t.load_subgoal_function(eq3,[3])
+t.load_subgoal_function(eq4,[4])
 
-t.load_succesor_function(inc_V0)
-t.load_succesor_function(dec_V0)
-t.load_succesor_function(inc_V1)
-t.load_succesor_function(dec_V1)
-t.load_succesor_function(inc_V2)
-t.load_succesor_function(dec_V2)
-t.load_succesor_function(inc_V3)
-t.load_succesor_function(dec_V3)
-t.load_succesor_function(inc_V4)
-t.load_succesor_function(dec_V4)
+t.load_succesor_function(inc, [0])
+t.load_succesor_function(dec, [0])
+t.load_succesor_function(inc, [1])
+t.load_succesor_function(dec, [1])
+t.load_succesor_function(inc, [2])
+t.load_succesor_function(dec, [2])
+t.load_succesor_function(inc, [3])
+t.load_succesor_function(dec, [3])
+t.load_succesor_function(inc, [4])
+t.load_succesor_function(dec, [4])
+
+sucessors = []
+for i in range(len(t.sucessor_functions)):
+    str_params = "(" + "".join(["t.variables[" + str(v) + "][0]" for v in t.sucessor_indexes[i]]) + ")"
+
+    eval(t.sucessor_functions[i].__name__ + str_params)
+    
+    sucessors.append(sucessor)
+
+
+
+sys.exit(0)
+
 
 # Running the IW1 planner on the task
 #p = Planner_IW1.Planner_IW1(t)
@@ -113,6 +95,7 @@ t.load_succesor_function(dec_V4)
 p = Planner_BFWS.Planner_BFWS(t)            
 solution_node = p.solve_BFWS()
 
+# Show Results
 if solution_node !=None:
     t.get_plan_relevant_atoms(solution_node)
     print t

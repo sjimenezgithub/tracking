@@ -25,8 +25,6 @@ def subgoal2(state):
         return True
     else:
         return False
-
-
     
 # Actions   
 def inc_V0(state):
@@ -60,17 +58,16 @@ t = Task.Task()
 for i in range(0,MAX_VARS):
     t.load_state_variable(5,range(MAX_VAL))
 
-t.load_subgoal_function(subgoal0)
-t.load_subgoal_function(subgoal1)
-t.load_subgoal_function(subgoal2)
+t.load_subgoal_function(subgoal0,[0])
+t.load_subgoal_function(subgoal1,[1])
+t.load_subgoal_function(subgoal2,[2])
 
-
-t.load_succesor_function(inc_V0)
-t.load_succesor_function(dec_V0)
-t.load_succesor_function(inc_V1)
-t.load_succesor_function(dec_V1)
-t.load_succesor_function(inc_V2)
-t.load_succesor_function(dec_V2)
+t.load_succesor_function(inc_V0,[0])
+t.load_succesor_function(dec_V0,[0])
+t.load_succesor_function(inc_V1,[1])
+t.load_succesor_function(dec_V1,[1])
+t.load_succesor_function(inc_V2,[2])
+t.load_succesor_function(dec_V2,[2])
 
 # Running the IW1 planner on the task
 #p = Planner_IW1.Planner_IW1(t)
