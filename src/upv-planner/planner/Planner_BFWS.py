@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import copy
 import Node,Task,Planner_IW1
+from constraint import *
 
 MAX_NODES = 100000
 
@@ -12,12 +13,20 @@ class Planner_BFWS:
         
         print ("Initializing BFWS relevance table")
         self.task.relevantAtoms = [False for i in range(self.task.offsets[-1] + len(self.task.domains[-1]))]
-        
+        self.get_relevantAtoms_with_IW1()
+#        self.get_relevantAtoms_with_RP()
+
+        print ("\nInitializing hmax novelty tables")
+        self.task.nrelevants = self.task.relevantAtoms.count(True)
+        self.task.H_MAX = len(self.task.subgoal_functions) * self.task.nrelevants + self.task.nrelevants + 1 
+        self.task.IW1table = [False for i in range(self.task.H_MAX) * (self.task.offsets[-1] + len(self.task.domains[-1]))]
+
+
+    def get_relevantAtoms_with_IW1(self):
         # Computing the relevant atoms for each subgoal
         for g in range(len(self.task.subgoal_functions)):
-            print (" --- subtask" + str(g) + " ---")
-
             # Creating the sub-task            
+            print (" --- subtask" + str(g) + " ---")
             t_g = Task.Task()                     
             for i in range(len(self.task.variables)):                            
                  t_g.load_state_variable(self.task.variables[i][0],self.task.domains[i])
@@ -40,11 +49,29 @@ class Planner_BFWS:
                     if self.task.relevantAtoms[index] == False and t_g.relevantAtoms[index] == True:
                         self.task.relevantAtoms[index] = True
 
-        print ("\nInitializing hmax novelty tables")
-        self.task.nrelevants = self.task.relevantAtoms.count(True)
-        H_MAX = len(self.task.subgoal_functions) * self.task.nrelevants + self.task.nrelevants + 1 
-        self.task.IW1table = [False for i in range(H_MAX) * (self.task.offsets[-1] + len(self.task.domains[-1]))]        
+                        
+    # Work in progress
+    def get_relevantAtoms_with_RP(self):
+        # get sucessors
+        states = [self.task.sucessor_functions[i](copy.deepcopy(self.task.variables)) for i in range(len(self.task.sucessor_functions))]
 
+        # merge sucessors
+        sets=[]
+        for i in range(len(self.task.variables)):
+            aux = [s[i] for s in states]
+            sets.append(list(set([item for sublist in aux for item in sublist])))
+        print sets
+
+        # check subgoals
+        problem = Problem()
+        for i in range(len(self.task.variables)):
+            problem.addVariable("V" + str(i), sets[i])
+
+#        problem.addConstraint(lambda a, b: a*2 == b, ("a", "b"))            
+            
+        problem.getSolutions()
+            
+       
                 
     def solve_BFWS(self):
         print ("Starting BFWS search")
@@ -57,8 +84,7 @@ class Planner_BFWS:
         open_set = set([root_node])
         closed_set = set([])
         self.task.ngenerated = 1
-
-        best_h = root_node.f_novelty(self.task)
+        best_h = self.task.H_MAX
         
         # Search                
         while(open_set):
@@ -72,7 +98,7 @@ class Planner_BFWS:
                 best_h = node.f_novelty(self.task)
             
             # expand node
-            succesor_nodes = [Node.heuristic_Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state)),self.task) for i in range(0,len(self.task.sucessor_functions))] 
+            succesor_nodes = [Node.heuristic_Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state)),self.task) for i in range(len(self.task.sucessor_functions))] 
             for succesor in succesor_nodes:
 
                 # Duplicate nodes test                

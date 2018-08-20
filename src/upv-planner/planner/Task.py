@@ -16,6 +16,7 @@ class Task:
         self.relevantAtoms = []
         self.nrelevants = 0
         self.IW1table = []
+        self.H_MAX=0
                         
         
     def load_state_variable(self,value,domain):

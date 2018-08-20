@@ -30,7 +30,7 @@ class Planner_IW1:
 
             node = open_list.pop(0)
  
-            succesor_nodes = [Node.Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state))) for i in range(0,len(self.task.sucessor_functions))]
+            succesor_nodes = [Node.Node(node,"action"+str(i),self.task.sucessor_functions[i](copy.deepcopy(node.state))) for i in range(len(self.task.sucessor_functions))]
             
             for succesor in succesor_nodes:
                 # Constraint test
